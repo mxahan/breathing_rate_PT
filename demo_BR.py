@@ -98,20 +98,20 @@ def inferred_value(model , rgbs , p = 4, xy = None):
 
 #%%
 
-data_br = pickle.load(open("../data_1.pkl", "rb"))
+data_br = pickle.load(open("../data.pkl", "rb"))
 # data_br = data_br[:,:,:,np.newaxis]
 
 
 
 def main():
-    fr_gp = 5
+    fr_gp = 15
     vid_st = 40
     data_rs = data_br[::fr_gp]
     xy = None
     
     traj_l , rgbs_l = [], []
     
-    for i in range(90):
+    for i in range(30):
         
         data_rgbs = data_rs[vid_st:vid_st+8]
         data_rgbs = torch.from_numpy(data_rgbs).permute(0,3,1, 2)
@@ -120,7 +120,7 @@ def main():
         rgbs, trajs_e = inferred_value(model, data_rgbs, p = 6, xy = xy)
 
         
-        if i%10 == 0:
+        if i%4 == 0:
             xy = None
         else:
             xy = trajs_e[:,-1,:,:]
@@ -141,3 +141,20 @@ def main():
 
 if __name__ == '__main__':
     trajs_e = main()
+    
+#%%
+
+import matplotlib.pyplot as plt
+
+t_s = []
+
+for pos_ in range(36):
+    v_1,t = [], []
+    for i in range(len(trajs_e[0])):
+        v_1.append(sum((trajs_e[0,i,pos_] - trajs_e[0,0,pos_])**2).cpu())
+        t.append(i/6)
+                            
+    t_s.append(np.array(v_1))
+
+
+plt.plot(np.array(t), np.array(v_1))
