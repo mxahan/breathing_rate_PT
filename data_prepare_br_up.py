@@ -193,7 +193,7 @@ def data_read_edge_detection(files, im_size=[300, 300]):
         
         edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=100) # Canny Edge Detection
         # Display Canny Edge Detection Image
-        data.append(edges)
+        data.append(frame1)
         
         kernel = np.ones((3,3),np.uint8)
         kernel1 = np.ones((5,5),np.uint8)
@@ -221,7 +221,7 @@ def data_read_edge_detection(files, im_size=[300, 300]):
     return data
 
 # test_video(files)
-data_og = data_read_edge_detection(files)
+data_og = data_read_edge_detection(files, im_size=[640, 360])
 data = data_og
 
 plt.imshow(data[100])
