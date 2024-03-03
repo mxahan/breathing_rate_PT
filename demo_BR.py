@@ -101,8 +101,11 @@ data_br = pickle.load(open("../data.pkl", "rb"))
 
 
 def main(fr_gp = 40, vid_st = 40, window_ = 40, p = 5):
-    data_rs = data_br[::fr_gp]
+    data_rs = data_br[vid_st:][::fr_gp]
+    vid_st = 0
     xy = None
+    
+    time_reset = int(30*60/(fr_gp*7))
     
     traj_l , rgbs_l = [], []
     
@@ -115,23 +118,24 @@ def main(fr_gp = 40, vid_st = 40, window_ = 40, p = 5):
         rgbs, trajs_e = inferred_value(model, data_rgbs, p = p, xy = xy)
 
         
-        if i%5 == 0:
+        if i% time_reset== 0:
             xy = None
         else:
             xy = trajs_e[:,-1,:,:]
             
-        traj_l.append(trajs_e.cpu())
-        rgbs_l.append(rgbs.cpu())
-        vid_st = vid_st +8
+        traj_l.append(trajs_e[:,0:7].cpu())
+        rgbs_l.append(rgbs[:,0:7].cpu())
+        vid_st = vid_st +7
     
     
     rgbs = torch.cat(rgbs_l, dim= 1)
     trajs_e = torch.cat(traj_l, dim= 1)
     
-    # image_show(rgbs, trajs_e)
+#     image_show(rgbs, trajs_e)
     torch.cuda.empty_cache()
     return trajs_e
 
+    
 #%%
 
 if __name__ == '__main__':
