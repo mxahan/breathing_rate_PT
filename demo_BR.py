@@ -139,10 +139,12 @@ def main(fr_gp = 40, vid_st = 40, window_ = 40, p = 5):
 #%%
 
 if __name__ == '__main__':
-    frame_gap = 10
-    video_start = 11
-    window_ = 20
     points = 5
+    
+    frame_gap = 5
+    video_start = 1500
+    window_ = 60
+    
     trajs_e = main(fr_gp=frame_gap, vid_st=video_start, window_= window_, p = points)
     
 #%%
